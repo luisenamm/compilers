@@ -138,7 +138,7 @@ parser = yacc.yacc()
     yacc.parse(s)'''
 
 content = []
-with open('/Users/luiseduardo/Documents/Tec/NovenoSemestre/Compiladores/Codigo/project/error.txt') as file:
+with open('code.txt') as file:
     content = file.readlines()
 
 for line in content:
