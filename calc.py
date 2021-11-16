@@ -1,11 +1,23 @@
 import ply.yacc as yacc
 import ply.lex as lex
 
-literals = ['=', '+', '-', '*', '/', '(', ')']
+literals = ['=', '+', '-', '*', '/', '(', ')', '^','{', '}', '<', '>', ';']
 reserved = { 
     'int' : 'INTDEC',
     'float' : 'FLOATDEC',
-    'print' : 'PRINT'
+    'print' : 'PRINT',
+    'and': 'AND',
+    'or': 'OR',
+    'string': 'STRING',
+    'boolean': 'BOOLEAN',
+    'true': 'TRUE',
+    'false': 'FALSE',
+    'if': 'IF',
+    'elif': 'ELIF',
+    'else': 'ELSE',
+    'do': 'DO',
+    'while': 'WHILE',
+    'for': 'FOR',    
  }
 
 tokens = [
