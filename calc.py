@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 import ply.lex as lex
 
-literals = ['=', '+', '-', '*', '/', '(', ')', '^','{', '}', '<', '>', ';']
+literals = ['=', '+', '-', '*', '/', '^', '(', ')','{', '}', '<', '>', ';']
 reserved = { 
     'int' : 'INTDEC',
     'float' : 'FLOATDEC',
@@ -57,6 +57,7 @@ lexer = lex.lex()
 precedence = (
     ('left', '+', '-'),
     ('left', '*', '/'),
+    ('left', '^'),
     ('right', 'UMINUS'),
 )
 
@@ -101,11 +102,18 @@ def p_expression_binop(p):
     '''expression : expression '+' expression
                   | expression '-' expression
                   | expression '*' expression
-                  | expression '/' expression'''
+                  | expression '/' expression
+                  | expression '^' expression'''
     if p[2] == '+':
         p[0] = p[1] + p[3]
     elif p[2] == '-':
         p[0] = p[1] - p[3]
+    elif p[2] == '*':
+        p[0] = p[1] * p[3]
+    elif p[2] == '/':
+        p[0] = p[1] / p[3]
+    elif p[2] == '^':
+        p[0] = p[1] ** p[3]
 
 def p_expression_uminus(p):
     "expression : '-' expression %prec UMINUS"
