@@ -1,12 +1,13 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
+# Lexer
 literals = ['=', '+', '-', '*', '-', '/', '^', '(', ')', '{', '}', ';']
 
 reserved = (
-	'bool', 
-    'int', 
+	'int',          
     'float', 
+    'boolean',
     'string',
     'true', 
     'false',
@@ -52,3 +53,45 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
+
+# Parser
+def p_block(p):
+    '''block : statement block
+			 | statement'''
+	
+def p_statement(p):
+	'''statement : declare
+			| assign'''
+
+def p_type(p):
+    ''' type : int | float | boolean | string'''
+    p[0] = p[1]
+
+def p_declare(p):
+    '''declare : type NAME '; | type NAME '=' expr ';' '''
+    if len(p) == 4:
+        p[0] = p[2]
+    else: 
+        p[0] = p[4]
+
+def p_assign(p):
+    '''assign : NAME '=' expression ';' '''
+	
+def p_statement_print(p):
+    '''statement : PRINT '(' expression ')' '''
+    print(p[3])
+
+def p_expression(p):
+    '''expression : booleanexpression
+		| numexpression
+		| stringexpression'''
+
+def p_boolexpression(p):
+    '''boolexpression : '(' booleanexpression ')'
+	            | boolval
+				| NAME'''
+
+def p_stringexpression(p):
+    '''stringexpression : STRTEXT
+	        | NAME'''
+	
