@@ -61,14 +61,18 @@ def p_block(p):
 	
 def p_statement(p):
 	'''statement : declare
-			| assign'''
+            | assign'''
 
 def p_type(p):
-    ''' type : int | float | boolean | string'''
+    ''' type : int 
+            | float 
+            | boolean 
+            | string'''
     p[0] = p[1]
 
 def p_declare(p):
-    '''declare : type NAME '; | type NAME '=' expr ';' '''
+    '''declare : type NAME ';' 
+        | type NAME '=' expression ';' '''
     if len(p) == 4:
         p[0] = p[2]
     else: 
@@ -76,22 +80,83 @@ def p_declare(p):
 
 def p_assign(p):
     '''assign : NAME '=' expression ';' '''
-	
+
 def p_statement_print(p):
     '''statement : PRINT '(' expression ')' '''
     print(p[3])
-
+	
 def p_expression(p):
     '''expression : booleanexpression
 		| numexpression
 		| stringexpression'''
 
-def p_boolexpression(p):
-    '''boolexpression : '(' booleanexpression ')'
+def p_booleanexpression(p):
+    '''booleanexpression : '(' booleanexpression ')'
 	            | boolval
-				| NAME'''
+				| NAME
+                | numexpression compare numexpression
+				| booleanexpression boolop booleanexpression'''
+
+def p_numexpression(p):
+    '''numexpression : '(' numexpression ')'
+		    | INUMBER
+			| FNUMBER
+			| NAME
+			| numexpression binop numexpression'''
+    if len(p) == 4 and p[2] =='binop':
+        if p[2] == '+':
+            p[0] = p[1] + p[3]
+        elif p[2] == '-':
+            p[0] = p[1] - p[3]
+        elif p[2] == '*':
+            p[0] = p[1] * p[3]
+        elif p[2] == '/':
+            p[0] = p[1] / p[3]
+        elif p[2] == '^':
+            p[0] = p[1] ** p[3]
 
 def p_stringexpression(p):
     '''stringexpression : STRTEXT
-	        | NAME'''
+	        | NAME
+            | stringexpression '+' stringexpression
+			| stringexpression '+' numexpression'''
+
+def p_boolval(p):
+    '''boolval : true
+			| false'''  
+
+def p_boolop(p):
+    '''boolop : and
+			  | or'''
+
+def p_binop(p):
+    '''binop : '+'
+			 | '-'
+			 | '*'
+			 | '/'
+			 | '^'
+	''' 
 	
+def p_compare(p):
+    '''compare : EQUALS
+			| NOTEQUALS
+			| GREATER
+			| LESS
+			| GREATEREQUALS
+			| LESSEQUALS '''
+
+def p_error(p):
+    if p:
+        print(p)
+        print("Syntax error at line '%s' character '%s'" % (p.lineno, p.lexpos) )
+    else:
+        print("Syntax error at EOF")
+
+parser = yacc.yacc()
+
+content = []
+with open('script.txt') as file:
+    content = file.readlines()
+
+for line in content:
+    yacc.parse(line)
