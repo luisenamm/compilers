@@ -21,7 +21,7 @@ reserved = (
     'while',	
 )
 
-tokens = ('NAME', 'INUMBER', 'FNUMBER', 'STRTEXT', 'EQUALS', 'NOTEQUALS', 'GREATER', 'LESS', 'GREATEREQUALS', 'LESSEQUALS') + reserved
+tokens = ('NAME', 'INUMBER', 'FNUMBER', 'STRTEXT', 'EQUAL', 'NOTEQUAL', 'GREATER', 'LESS', 'GREATEREQUAL', 'LESSEQUAL') + reserved
 
 # Tokens
 reserved_map = {}
@@ -30,18 +30,18 @@ for r in reserved:
 
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'NAME')    # Check for reserved words
+    t.type = reserved_map.get(t.value,"NAME")    # Check for reserved words
     return t
 
 t_FNUMBER = r'-?\d+\.\d+' # Both positive and negative
 t_INUMBER = r'-?\d+' # Both positive and negative
 t_ignore = " \t"
-t_EQUALS = r'=='
-t_NOTEQUALS = r'!='
+t_EQUAL = r'=='
+t_NOTEQUAL = r'!='
 t_GREATER = r'>'
 t_LESS = r'<'
-t_GREATEREQUALS = r'>='
-t_LESSEQUALS = r'<='
+t_GREATEREQUAL = r'>='
+t_LESSEQUAL = r'<='
 
 def t_newline(t):
     r'\n+'
@@ -56,101 +56,130 @@ lexer = lex.lex()
 
 # Parser
 def p_block(p):
-    '''block : statement block
-			 | statement'''
-	
-def p_statement(p):
-	'''statement : declare
-            | assign'''
+    '''
+    block : statement ';' block
+        | statement ';'
+    '''
 
-def p_type(p):
-    ''' type : int 
-            | float 
-            | boolean 
-            | string'''
+
+def p_block_ctrl(p):
+    '''
+    block : condition block        
+        | condition
+    '''
+
+
+def p_statement(p):
+    '''
+    statement : NAME '=' expression
+        | expression
+        | declare
+    '''
+    if len(p) == 2:
+        p[0] = p[1]
+
+#def p_statement_print(p):
+ #   '''statement : PRINT '(' expression ')' '''
+  #  print(p[3])'''
+
+def p_expression(p):
+    ''' expression : stringexpression
+        | numexpression
+        | booleanexpression '''
     p[0] = p[1]
 
-def p_declare(p):
-    '''declare : type NAME ';' 
-        | type NAME '=' expression ';' '''
-    if len(p) == 4:
-        p[0] = p[2]
-    else: 
-        p[0] = p[4]
-
-def p_assign(p):
-    '''assign : NAME '=' expression ';' '''
-
-def p_statement_print(p):
-    '''statement : PRINT '(' expression ')' '''
-    print(p[3])
-	
-def p_expression(p):
-    '''expression : booleanexpression
-		| numexpression
-		| stringexpression'''
-
-def p_booleanexpression(p):
-    '''booleanexpression : '(' booleanexpression ')'
-	            | boolval
-				| NAME
-                | numexpression compare numexpression
-				| booleanexpression boolop booleanexpression'''
-
-def p_numexpression(p):
-    '''numexpression : '(' numexpression ')'
-		    | INUMBER
-			| FNUMBER
-			| NAME
-			| numexpression binop numexpression'''
-    if len(p) == 4 and p[2] =='binop':
-        if p[2] == '+':
-            p[0] = p[1] + p[3]
-        elif p[2] == '-':
-            p[0] = p[1] - p[3]
-        elif p[2] == '*':
-            p[0] = p[1] * p[3]
-        elif p[2] == '/':
-            p[0] = p[1] / p[3]
-        elif p[2] == '^':
-            p[0] = p[1] ** p[3]
 
 def p_stringexpression(p):
-    '''stringexpression : STRTEXT
-	        | NAME
-            | stringexpression '+' stringexpression
-			| stringexpression '+' numexpression'''
+    ''' stringexpression : stringexpression '+' stringexpression '''
+
+
+def p_stringexpression_const(p):
+    ''' stringexpression : STRTEXT
+        | NAME '''    
+
+
+def p_numexpression(p):
+    ''' numexpression : number
+        | numexpression '+' numexpression
+        | numexpression '-' numexpression
+        | numexpression '*' numexpression
+        | numexpression '/' numexpression
+        | numexpression '^' numexpression '''
+    if len(p) == 2:
+        p[0] = p[1] 
+
+
+def p_number(p):
+    ''' number : INUMBER
+        | FNUMBER
+        | NAME '''
+
+
+def p_booleanxpression(p):
+    ''' booleanxpression : boolval
+        | boolcompare
+        | booleanexpression and booleanexpression
+        | booleanexpression or booleanexpression
+        | '(' booleanexpression and booleanexpression ')'
+        | '(' booleanexpression or booleanexpression ')' '''
 
 def p_boolval(p):
-    '''boolval : true
-			| false'''  
+    ''' boolval : NAME
+        | true
+        | false '''
 
-def p_boolop(p):
-    '''boolop : and
-			  | or'''
 
-def p_binop(p):
-    '''binop : '+'
-			 | '-'
-			 | '*'
-			 | '/'
-			 | '^'
-	''' 
-	
-def p_compare(p):
-    '''compare : EQUALS
-			| NOTEQUALS
-			| GREATER
-			| LESS
-			| GREATEREQUALS
-			| LESSEQUALS '''
+def p_boolcompare(p):
+    ''' boolcompare : number EQUAL number
+        | number NOTEQUAL number
+        | number GREATER number
+        | number LESS number
+        | number GREATEREQUAL number
+        | number LESSEQUAL number
+        | stringexpression EQUAL stringexpression
+        | stringexpression NOTEQUAL stringexpression '''
 
-def p_error(p):
-    if p:
-        print(p)
-        print("Syntax error at line '%s' character '%s'" % (p.lineno, p.lexpos) )
-    else:
-        print("Syntax error at EOF")
+
+def p_declare(p):
+    ''' declare : numdeclare
+        | strdeclare
+        | booldeclare '''
+    p[0] = p[1]
+
+
+def p_numdeclare(p):
+    ''' numdeclare : int NAME
+        | float NAME
+        | int NAME '=' numexpression
+        | float NAME '=' numexpression '''
+
+def p_strdeclare(p):
+    ''' strdeclare : string NAME
+        | string NAME '=' stringexpression '''
+
+
+def p_booldeclare(p):
+    ''' booldeclare : boolean NAME
+        | boolean NAME '=' boolexpression '''   
+
+
+def p_condition(p):
+    ''' condition : if boolblock braceb
+        | if boolblock braceb else braceb
+        | if boolblock braceb conditionelif else braceb '''
+
+def p_conditionelif(p):
+    ''' conditionelif : elif boolblock braceb
+        | elif boolblock braceb conditionelif '''
+
+
+def p_boolblock(p):
+    ''' boolblock : '(' boolexpression ')' '''
+    p[0] = p[2]
+
+def p_braceb(p):
+    ''' braceb : '{' block '}' '''
+    p[0] = p[2]
 
 parser = yacc.yacc()
 

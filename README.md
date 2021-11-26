@@ -12,14 +12,41 @@ It is necessarily to implement [lex.py](https://github.com/luisenamm/compilers/b
 ``` 
 Int
 Float
+Boolean
+String
 ```
 
 ## Operations
 
 ### Arithmetic operations
 
-* Addition +
-* Substraction -
-* Multiplication *
-* Division /
-* Power ^
+* Addition: +
+* Substraction: -
+* Multiplication: *
+* Division: /
+* Power: ^
+
+### Compare operations
+
+* Equal: ==
+* Not equal: !=
+* Greater than: >
+* Less than: <
+* Greater equal: >=
+* Less equal: <=
+
+### Boolean operations
+
+* And: and
+* Or: or
+### String operations
+
+* Concatenation: +
+
+## Sentences
+
+### Conditionals
+
+* if
+* elif
+* else
