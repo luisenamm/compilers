@@ -1,0 +1,22 @@
+int a = 2;
+int b = 3;
+int c = a + b;
+
+string d = "luis;
+string e = "nuñez";
+string f = s + l;
+
+float test1 = 1 + 2.0;
+int test2 = 1 + 2.0;
+
+if (true) {
+	float i = 1.9;
+	string carlos = "nombre";
+	if (9 < 4) {
+		luis = "luis";
+	} elif (carlos == "nombre") {
+		carlos = "nuñez";
+	} else {
+		carlos = "compiladores";
+	}
+}
