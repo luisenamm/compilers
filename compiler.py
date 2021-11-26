@@ -64,7 +64,9 @@ def p_block(p):
 
 def p_block_ctrl(p):
     '''
-    block : condition block        
+    block : loop block
+        | condition block        
+        | loop
         | condition
     '''
 
@@ -180,6 +182,16 @@ def p_boolblock(p):
 def p_braceb(p):
     ''' braceb : '{' block '}' '''
     p[0] = p[2]
+
+def p_loop(p):
+    ''' loop : forctrl'''
+    p[0] = p[1]
+
+def p_forctrl(p):
+    ''' forctrl : for forcondition braceb''' 
+
+def p_forcondition(p):
+    ''' forcondition : '(' statement ';' statement ';' statement ';' ')' '''
 
 parser = yacc.yacc()
 
