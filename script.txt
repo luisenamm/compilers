@@ -4,19 +4,37 @@ int c = a + b;
 
 string d = "luis";
 string e = "nunez";
-string f = s + l;
+string f = d + e;
 
-float test1 = 1 + 2.0;
-int test2 = 1 + 2.0;
+float g = 1 + 2.0;
+int h = 1 + 2.0;
 
 if (true) {
-	float i = 1.9;
+	float i = 4.5;
 	string nombre = "nombre";
-	if (9 < 4) {
+	if (10 > 7) {
 		nombre = "luis";
-	} elif (nombre == "nombre") {
+	} elif (10 == 15) {
 		nombre = "nuñez";
 	} else {
 		nombre = "compiladores";
 	}
 }
+
+for (int i = 0; i < 10; i = i + a) {
+	float j = 3.9;
+}
+
+while (true) {
+	float k = 8.1;
+	for (int i = 0; i < 10; i = i + a) {
+		float k = 1.7;
+	}
+	if (9 < 4) {
+		hola = "profesor";
+	}
+}
+
+do {
+	float l = 2.4;
+} while (true);
