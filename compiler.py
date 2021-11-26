@@ -36,7 +36,7 @@ def t_NAME(t):
 
 t_FNUMBER = r'-?\d+\.\d+' # Both positive and negative
 t_INUMBER = r'-?\d+' # Both positive and negative
-t_STRTEXT = r'\"([^\\\n]|(\\.))*?\"'
+t_STRTEXT = r'\"([^\\\n]|(\\.))*?\"' # For string names
 t_ignore = " \t"
 t_EQUAL = r'=='
 t_NOTEQUAL = r'!='
@@ -78,8 +78,7 @@ def p_block_ctrl(p):
     else:
         p[0] = p[1]
 
-
-def p_statement(p):
+def p_statement(p): # Statement structure
     '''
     statement : NAME '=' expression
         | expression
@@ -89,7 +88,7 @@ def p_statement(p):
     else:
         p[0] = Node('assign', children = [Node(p[1]), p[3]])
 
-def p_statement_print(p):
+def p_statement_print(p): # Print structure
     '''statement : print '(' expression ')' '''
     print(p[3])
 
@@ -101,7 +100,7 @@ def p_expression(p):
 
 
 def p_stringexpression(p):
-    ''' stringexpression : stringexpression '+' stringexpression '''
+    ''' stringexpression : stringexpression '+' stringexpression ''' # Concatenate two strings
     p[0] = Node('conc', children = [p[1], p[3]])
 
 
@@ -110,7 +109,7 @@ def p_stringexpression_const(p):
         | NAME '''    
     p[0] = Node('str')
 
-def p_numexpression(p):
+def p_numexpression(p):  # Arithmetical operations
     ''' numexpression : number
         | numexpression '+' numexpression
         | numexpression '-' numexpression
@@ -123,13 +122,13 @@ def p_numexpression(p):
         p[0] = Node('binop', children = [p[1],p[3]])   
 
 
-def p_number(p):
+def p_number(p):   # Two types of numbers: integers and floats
     ''' number : INUMBER
         | FNUMBER
         | NAME '''
     p[0] = Node(p[1])
 
-def p_booleanexpression(p):
+def p_booleanexpression(p): # Booleans operations include both and or
     ''' booleanexpression : boolval
         | boolcompare
         | booleanexpression and booleanexpression
@@ -150,7 +149,7 @@ def p_boolval(p):
     p[0] = Node(p[1])
 
 
-def p_boolcompare(p):
+def p_boolcompare(p):       # Compare operations
     ''' boolcompare : number EQUAL number
         | number NOTEQUAL number
         | number GREATER number
@@ -161,15 +160,14 @@ def p_boolcompare(p):
         | stringexpression NOTEQUAL stringexpression '''
     p[0] = Node('comp', children = [p[1], p[3]])
 
-
-def p_declare(p):
+def p_declare(p):   # Declare all types here
     ''' declare : numdeclare
         | strdeclare
         | booldeclare '''
     p[0] = p[1]
 
 
-def p_numdeclare(p):
+def p_numdeclare(p):    # Declare int and float numbers
     ''' numdeclare : int NAME
         | float NAME
         | int NAME '=' numexpression
@@ -180,7 +178,7 @@ def p_numdeclare(p):
         assign = Node('assign', children = [Node(p[2]), p[4]])
         p[0] = Node('declaration', children = [Node(p[1]),assign])
 
-def p_strdeclare(p):
+def p_strdeclare(p):    # Declare strings
     ''' strdeclare : string NAME
         | string NAME '=' stringexpression '''
     if len(p) == 3:
@@ -190,7 +188,7 @@ def p_strdeclare(p):
         p[0] = Node('declaration', children = [Node(p[1]), assign])
 
 
-def p_booldeclare(p):
+def p_booldeclare(p):   # Declare booleans
     ''' booldeclare : boolean NAME
         | boolean NAME '=' booleanexpression '''   
     if len(p) == 3:
@@ -199,7 +197,7 @@ def p_booldeclare(p):
         assign = Node('assign', children = [Node(p[2]), p[4]])
         p[0] = Node('declaration', children = [Node(p[1]), assign])
 
-def p_condition(p):
+def p_condition(p):     # Conditional statement 
     ''' condition : if boolblock braceb
         | if boolblock braceb else braceb
         | if boolblock braceb conditionelif else braceb '''
@@ -227,14 +225,13 @@ def p_braceb(p):
     ''' braceb : '{' block '}' '''
     p[0] = p[2]
 
-def p_loop(p):
+def p_loop(p):  # Loop types
     '''
     loop : forctrl
         | whilectrl
         | dowhilectrl'''
     
     p[0] = p[1]
-
 
 def p_forctrl(p):
     '''forctrl : for forcond braceb'''
@@ -263,6 +260,7 @@ def p_error(p):
 
 parser = yacc.yacc()
 
+# Creating nodes that will help for TAC
 class Node:
     def __init__(self, ntype, parent = None, children = []):
         self.ntype = ntype
@@ -278,20 +276,11 @@ class Node:
 output = parser.parse(lexer= lexer,input=open("script.txt").read())
 #print(output)
 
+'''------------------------------------------------------------------------------------------------------------------------'''
+'''------------------------------------------------------------------------------------------------------------------------'''
+'''------------------------------------------------------------------------------------------------------------------------'''
 
-'''
-
-
-
-
-
-
-
-
-
-
-
-'''
+# Implementing functions that will help for TAC
 
 var = 0
 label = 0
@@ -318,6 +307,8 @@ def get_label():
 	global label
 	label += 1
 	return 'L' + str(label)
+
+# MEthod that generates the TAC
 
 def tac(node):
 	if not isinstance(node, Node):
@@ -429,7 +420,7 @@ def tac(node):
 		wrt_ln('goto', label1)
 		wrt_ln(label2)
 
-tac(output)
+tac(output)     # Creating TAC
 
 f = open('output.txt', 'w')
 f.write(tac_str)
