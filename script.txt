@@ -2,8 +2,8 @@ int a = 2;
 int b = 3;
 int c = a + b;
 
-string d = "luis;
-string e = "nuñez";
+string d = "luis";
+string e = "nunez";
 string f = s + l;
 
 float test1 = 1 + 2.0;
@@ -11,12 +11,12 @@ int test2 = 1 + 2.0;
 
 if (true) {
 	float i = 1.9;
-	string carlos = "nombre";
+	string nombre = "nombre";
 	if (9 < 4) {
-		luis = "luis";
-	} elif (carlos == "nombre") {
-		carlos = "nuñez";
+		nombre = "luis";
+	} elif (nombre == "nombre") {
+		nombre = "nuñez";
 	} else {
-		carlos = "compiladores";
+		nombre = "compiladores";
 	}
 }
