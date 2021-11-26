@@ -184,7 +184,9 @@ def p_braceb(p):
     p[0] = p[2]
 
 def p_loop(p):
-    ''' loop : forctrl'''
+    ''' loop : forctrl
+            | whilectrl
+            | dowhilectrl'''
     p[0] = p[1]
 
 def p_forctrl(p):
@@ -192,6 +194,12 @@ def p_forctrl(p):
 
 def p_forcondition(p):
     ''' forcondition : '(' statement ';' statement ';' statement ';' ')' '''
+
+def p_whilectrl(p): 
+    ''' whilectrl : while boolblock braceb'''
+
+def p_dowhilectrl(p):
+    ''' dowhilectrl : do braceb while boolblock ';' '''
 
 parser = yacc.yacc()
 

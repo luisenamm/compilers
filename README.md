@@ -47,6 +47,12 @@ String
 
 ### Conditionals
 
-* if
-* elif
-* else
+* If: if(){}
+* Elif: elif(){}
+* Else: else(){}
+
+### Loops
+
+* For :for(;;){}
+* While: while(){}
+* Do-while: do{}while();
