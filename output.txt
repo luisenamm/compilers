@@ -1,0 +1,60 @@
+a = 2
+b = 3
+r0 = a + b
+c = r0
+d = "luis"
+e = "nunez"
+r1 = d + e
+f = r1
+r2 = 1 + 2.0
+g = r2
+r3 = 1 + 2.0
+h = r3
+if false true goto L0
+i = 4.5
+nombre = "nombre"
+r4 = 10 > 7
+if false r4 goto L1
+nombre = "luis"
+goto L2
+L1
+r5 = 10 == 15
+if false r5 goto L3
+nombre = "nuñez"
+goto L2
+L3
+nombre = "compiladores"
+L2
+L0
+i = 0
+L4
+r6 = i < 10
+if false r6 goto L5
+j = 3.9
+r7 = i + a
+i = r7
+goto L4
+L5
+L6
+if false true goto L7
+k = 8.1
+i = 0
+L8
+r8 = i < 10
+if false r8 goto L9
+k = 1.7
+r9 = i + a
+i = r9
+goto L8
+L9
+r10 = 9 < 4
+if false r10 goto L10
+hola = "profesor"
+L10
+goto L6
+L7
+L11
+l = 2.4
+if false true goto L12
+goto L11
+L12
